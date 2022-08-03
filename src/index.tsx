@@ -1,4 +1,4 @@
-import { Form, Clipboard, ActionPanel, Action, showHUD } from "@raycast/api";
+import { Form, Clipboard, ActionPanel, Action, showHUD, popToRoot } from "@raycast/api";
 import { useState } from "react";
 
 interface CommitValues {
@@ -193,6 +193,7 @@ export default function Command(props: { draftValues?: CommitValues }) {
     console.log(values, "\n", commitMessage);
     await Clipboard.copy(commitMessage);
     showHUD("📋 Copied to Clipboard");
+    popToRoot();
   }
 
   return (
