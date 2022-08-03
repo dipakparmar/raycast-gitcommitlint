@@ -101,10 +101,6 @@ export default function Command(props: { draftValues?: CommitValues }) {
   const [footer, setFooter] = useState<string | undefined>();
 
   async function validateCustomType(type: string) {
-    // check the type is one word string or else show error
-
-    // check if the string starts with emoji (check with regex)
-    // (\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])
     const emojiRegex =
       /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gm;
     if (!emojiRegex.test(type)) {
@@ -136,17 +132,6 @@ export default function Command(props: { draftValues?: CommitValues }) {
   }
 
   async function generateFooter() {
-    // console.log(!isBreakingChange, !isIssueAffected);
-    if (!isBreakingChange) {
-      // console.log("breaking change not checked, removing breaking change body");
-      await setBreakingBody(undefined);
-      // console.log("removed breaking change body: ", breakingBody);
-    }
-    if (!isIssueAffected) {
-      // console.log("issue affected not checked, removing issue affected body");
-      await setIssuesBody(undefined);
-      // console.log("removed issue affected body: ", issuesBody);
-    }
     let footerString = "";
     if (breakingBody !== undefined) {
       footerString += breakingBody;
@@ -157,9 +142,6 @@ export default function Command(props: { draftValues?: CommitValues }) {
       }
       footerString += issuesBody;
     }
-    // console.log("this is breaking body", breakingBody, " this is issues body", issuesBody);
-    // console.log(footerString);
-
     await setFooter(footerString);
   }
 
@@ -189,8 +171,6 @@ export default function Command(props: { draftValues?: CommitValues }) {
     if (footer) {
       commitMessage += `\n\n${footer}`;
     }
-
-    console.log(values, "\n", commitMessage);
     await Clipboard.copy(commitMessage);
     showHUD("📋 Copied to Clipboard");
     popToRoot();
@@ -212,9 +192,6 @@ export default function Command(props: { draftValues?: CommitValues }) {
         info="the type of change that you're committing"
         onChange={setType}
       >
-        {/* {Object.keys(commitTypes).map((k: string) => (
-          <Form.Dropdown.Item value={k} title={commitTypes[k]} key={k} />
-        ))} */}
         {Object.keys(commitTypes).map((k: string) => (
           <Form.Dropdown.Item value={k} title={k + ": " + commitTypes[k].title} icon={commitTypes[k].emoji} key={k} />
         ))}
